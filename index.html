@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chiziqli Algebra Lab</title>
+<style>
+:root{--bg:#f3f7ff;--panel:#fff;--ink:#14213d;--muted:#64748b;--blue:#2563eb;--blue2:#60a5fa;--line:#dbe5f5;--soft:#eaf2ff;--green:#07865b;--red:#c24141;--shadow:0 12px 35px #1c3b6810}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#f6f9ff,#eef5ff);font:15px/1.55 Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(115deg,#102b63,#1d4ed8 70%,#3b82f6);color:white;padding:25px max(20px,calc((100% - 1220px)/2));}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:45px;height:45px;border-radius:14px;background:#ffffff20;border:1px solid #ffffff40;display:grid;place-items:center;font-size:23px;font-weight:800}
+h1{font-size:clamp(23px,3vw,32px);margin:0}header p{margin:5px 0 0;color:#dbeafe}
+main{max-width:1220px;margin:24px auto;padding:0 18px 45px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab{border:1px solid var(--line);background:white;color:#334155;padding:10px 16px;border-radius:12px;font-weight:700;cursor:pointer}.tab.active{background:var(--blue);color:white;border-color:var(--blue)}
+.layout{display:grid;grid-template-columns:minmax(280px,390px) minmax(0,1fr);gap:18px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);min-width:0}.panel h2{font-size:19px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 15px}
+label{font-size:13px;font-weight:700;display:block;margin-bottom:5px}.field{margin-bottom:12px}input,select{width:100%;border:1px solid #cbd8ec;border-radius:10px;padding:10px 11px;font:inherit;color:var(--ink);background:#fff}
+button{font:inherit}.primary{background:var(--blue);color:#fff;border:0;border-radius:11px;padding:11px 15px;font-weight:750;cursor:pointer}.secondary{background:var(--soft);color:#1d4ed8;border:1px solid #c9dcff;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer}.buttonrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.matrixwrap{overflow:auto;margin:10px 0 15px}.matrix{border-collapse:separate;border-spacing:5px;margin:auto}.matrix td{padding:0}.matrix input{width:66px;min-width:58px;text-align:center;padding:8px 4px;border-radius:8px;font-variant-numeric:tabular-nums}
+.matrix .rhs{background:#f0fdf4;border-color:#a7f3d0}.matrixcaption{font-size:12px;color:var(--muted);text-align:center}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}.metric{background:#f5f8ff;border:1px solid var(--line);border-radius:12px;padding:12px}.metric small{color:var(--muted);display:block}.metric strong{font-size:21px;display:block;overflow-wrap:anywhere}
+.status{padding:11px 13px;border-radius:11px;background:#effcf6;color:#086447;border:1px solid #b7f0d7;margin:10px 0}.error{background:#fff1f2;color:#9f1239;border-color:#fecdd3}
+.sectiontitle{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:8px}.sectiontitle h2{margin:0}
+.step{border:1px solid var(--line);border-radius:12px;padding:12px;margin:9px 0;background:#fbfdff}.step b{color:#1d4ed8}.step pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fb;padding:10px;border-radius:8px;margin:8px 0 0;font:13px/1.5 ui-monospace,Consolas,monospace}
+.chartbox{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff;margin-top:10px}.chartbox h3{font-size:15px;margin:0 0 8px}.chart{width:100%;height:auto;display:block;min-height:150px}
+.hidden{display:none!important}.note{font-size:12px;color:var(--muted)}.formula{font-family:Cambria,Georgia,serif;background:#f7faff;border:1px solid var(--line);padding:10px;border-radius:10px;overflow:auto}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}header{padding:22px 18px}.panel{padding:16px}.matrix input{width:57px}}
+@media print{header{background:#1d4ed8!important;print-color-adjust:exact}.tabs,.buttonrow,.no-print{display:none!important}body{background:white}.panel{box-shadow:none;break-inside:avoid}main{max-width:none;margin:0;padding:10px}.layout{grid-template-columns:1fr 1fr}}
+
+.step{padding:15px 16px;background:#fff;border:1px solid #e1e9f6;border-radius:14px;margin:12px 0;box-shadow:0 4px 14px #173b6b08}
+.steptitle{display:flex;align-items:flex-start;gap:10px;margin-bottom:13px;color:#243b65;font-size:14px;line-height:1.45}
+.stepnum{flex:0 0 27px;width:27px;height:27px;border-radius:9px;background:#e8f1ff;color:#1d4ed8;display:grid;place-items:center;font-weight:800;font-size:12px}
+.steptitle strong{padding-top:3px}
+.steptablewrap{overflow-x:auto;padding:2px 0 5px}
+.steptable{border-collapse:separate;border-spacing:4px;margin:0 auto;width:max-content;min-width:70%}
+.steptable th{font-size:11px;font-weight:700;color:#71809a;padding:5px 9px;text-align:center}
+.steptable td{min-width:64px;text-align:center;padding:9px 10px;border:1px solid #e1e9f5;border-radius:8px;background:#f7f9fd;font:13px/1.2 ui-monospace,Consolas,monospace;color:#243b65}
+.steptable .rhshead{border-left:2px solid #b8c9e4;padding-left:14px}
+.steptable .rhscol{background:#eefbf5;border-color:#c8efdd;color:#08734f;font-weight:700;border-left:2px solid #b8c9e4}
+.solutionline{display:flex;gap:9px;flex-wrap:wrap}
+.solutionchip{display:flex;gap:10px;align-items:center;background:#eefbf5;border:1px solid #c8efdd;color:#08734f;padding:10px 13px;border-radius:10px}
+.solutionchip span{font:600 14px ui-monospace,Consolas,monospace}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">∑</div><div><h1>Chiziqli Algebra Lab</h1><p>Leontev mahsuldorlik modeli · Xalqaro savdo modeli</p></div></div></header>
+<main>
+<div class="tabs no-print"><button class="tab active" data-tab="leontief">Leontev modeli</button><button class="tab" data-tab="trade">Xalqaro savdo</button><button class="tab" data-tab="about">Nazariya va qo‘llanma</button></div>
+<section id="leontief">
+<div class="layout">
+<div class="panel">
+<h2>Model ma’lumotlari</h2><p class="sub">Tarmoqlar sonini tanlang va texnologik koeffitsiyentlar matritsasi A hamda yakuniy talab D ni kiriting.</p>
+<div class="field"><label for="n">Matritsa o‘lchami</label><select id="n"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><div class="note">N×N matritsa: 2×2 dan 10×10 gacha.</div></div>
+<div class="sectiontitle"><h2 style="font-size:16px">A matritsasi</h2><button class="secondary" id="example">Namunani yuklash</button></div>
+<div id="amatrix" class="matrixwrap"></div><div class="matrixcaption">A matritsasi — tarmoqlararo sarf koeffitsiyentlari</div>
+<div class="sectiontitle" style="margin-top:15px"><h2 style="font-size:16px">Yakuniy talab D</h2></div><div id="dvector" class="matrixwrap"></div>
+<div class="formula">(I − A)X = D &nbsp; → &nbsp; X = (I − A)⁻¹D</div>
+<div class="buttonrow"><button class="primary" id="solve">Hisoblash va bosqichlarni ko‘rsatish</button><button class="secondary" id="reset">Qayta tiklash</button></div>
+<p class="note">Qiymatlarni o‘zingiz kiriting. O‘nli kasr uchun nuqta ishlating, masalan 0.25.</p>
+</div>
+<div class="panel">
+<div class="sectiontitle"><h2>Natijalar</h2><button class="secondary no-print" onclick="window.print()">PDF / Chop etish</button></div>
+<p class="sub">Hisoblangan ishlab chiqarish hajmlari va vizual tahlil.</p>
+<div id="status" class="status">Matritsani to‘ldirib, «Hisoblash» tugmasini bosing.</div>
+<div id="results" class="results"></div>
+<div class="chartbox"><h3>Ishlab chiqarish hajmi X</h3><svg id="barChart" class="chart" viewBox="0 0 600 250" role="img" aria-label="Ishlab chiqarish hajmlari diagrammasi"></svg></div>
+<div class="chartbox"><h3>Yechish bosqichlari — Gauss usuli</h3><p class="note">Augmentlangan matritsa [I−A | D] ustida bajarilgan satr amallari ko‘rsatiladi.</p><div id="steps"><p class="note">Hisoblashdan keyin Gauss usuli bosqichlari shu yerda chiqadi.</p></div></div>
+</div></div></section>
+<section id="trade" class="hidden"><div class="layout"><div class="panel"><h2>Xalqaro savdo modeli</h2><p class="sub">Ikki davlat va ikki mahsulot uchun bir birlik mahsulot ishlab chiqarishga ketadigan mehnat soatlarini kiriting.</p>
+<div class="field"><label for="c1">1-davlat nomi</label><input id="c1" value="A davlati"></div><div class="field"><label for="c2">2-davlat nomi</label><input id="c2" value="B davlati"></div>
+<div class="field"><label for="p1">1-mahsulot nomi</label><input id="p1" value="Kompyuter"></div><div class="field"><label for="p2">2-mahsulot nomi</label><input id="p2" value="Telefon"></div>
+<div class="field"><label id="lab11">A davlati — Kompyuter (soat)</label><input id="h11" type="number" min="0.01" step="any" value="10"></div><div class="field"><label id="lab12">A davlati — Telefon (soat)</label><input id="h12" type="number" min="0.01" step="any" value="5"></div>
+<div class="field"><label id="lab21">B davlati — Kompyuter (soat)</label><input id="h21" type="number" min="0.01" step="any" value="6"></div><div class="field"><label id="lab22">B davlati — Telefon (soat)</label><input id="h22" type="number" min="0.01" step="any" value="8"></div>
+<button id="tradeSolve" class="primary">Qiyosiy ustunlikni hisoblash</button></div><div class="panel"><h2>Tahlil natijasi</h2><div id="tradeResult" class="status">Qiymatlarni kiriting va hisoblang.</div><div class="chartbox"><h3>Mehnat sarfi taqqoslanishi</h3><svg id="tradeChart" class="chart" viewBox="0 0 600 260"></svg></div><p class="note">Bu soddalashtirilgan Rikardo modeli: mehnat sarfi va qiyosiy ustunlikni taqqoslaydi. Haqiqiy narx, savdo hajmi yoki foydani hisoblamaydi.</p></div></div></section>
+<section id="about" class="hidden"><div class="panel"><h2>Nazariya va qo‘llanma</h2><h3>Leontevning mahsuldorlik modeli</h3><p>Iqtisodiyot bir nechta tarmoqqa ajratiladi. Har bir tarmoq mahsulot ishlab chiqarish uchun boshqa tarmoqlar mahsulotidan foydalanadi.</p><div class="formula">(I − A)X = D</div><ul><li><b>A</b> — tarmoqlararo sarf koeffitsiyentlari matritsasi.</li><li><b>X</b> — yalpi ishlab chiqarish vektori.</li><li><b>D</b> — yakuniy talab vektori.</li><li><b>I</b> — birlik matritsa.</li></ul><h3>Gauss usuli</h3><p>Gauss usulida tenglamalar tizimi kengaytirilgan matritsa orqali yechiladi. Satrlar almashtiriladi, yetakchi elementga bo‘linadi va boshqa satrlardagi tegishli elementlar nolga keltiriladi. Oxirida orqaga qo‘yish orqali noma’lumlar topiladi.</p><h3>Xalqaro savdo</h3><p>Qiyosiy ustunlik mahsulotning muqobil xarajati kamroq bo‘lgan davlatda bo‘ladi. Model ikki mahsulot va ikki davlat misolida mehnat sarflarini solishtiradi.</p><p class="note">Eslatma: ushbu dastur o‘quv prototipidir. Rasmiy ilmiy ishda model shartlari va natijalarni alohida tekshirish tavsiya etiladi.</p></div></section>
+<footer>Chiziqli Algebra Lab · O‘quv maqsadida yaratilgan veb-prototip</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let lastSolution=null;
+function defaultData(n){let A=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j?0.2:(Math.abs(i-j)===1?0.1:0.03)));let D=Array.from({length:n},(_,i)=>100-10*i);return {A,D};}
+function renderInputs(preserve=true){
+ const n=+$('n').value, oldA=[],oldD=[];
+ if(preserve){document.querySelectorAll('#amatrix input').forEach((el,i)=>{let r=Math.floor(i/(+$('n').dataset.oldn||n));});}
+ const data=defaultData(n);
+ $('amatrix').innerHTML='';let table=document.createElement('table');table.className='matrix';
+ for(let i=0;i<n;i++){let tr=document.createElement('tr');for(let j=0;j<n;j++){let td=document.createElement('td'),inp=document.createElement('input');inp.type='number';inp.step='any';inp.value=data.A[i][j];inp.id=`a_${i}_${j}`;inp.setAttribute('aria-label',`A ${i+1},${j+1}`);td.append(inp);tr.append(td)}table.append(tr)}$('amatrix').append(table);
+ $('dvector').innerHTML='';let dt=document.createElement('table');dt.className='matrix';let tr=document.createElement('tr');for(let i=0;i<n;i++){let td=document.createElement('td'),inp=document.createElement('input');inp.type='number';inp.step='any';inp.value=data.D[i];inp.id=`d_${i}`;inp.className='rhs';inp.setAttribute('aria-label',`D ${i+1}`);td.append(inp);tr.append(td)}dt.append(tr);$('dvector').append(dt);
+ $('n').dataset.oldn=n;
+}
+function readData(){let n=+$('n').value,A=[],D=[];for(let i=0;i<n;i++){A[i]=[];for(let j=0;j<n;j++){let v=Number($(`a_${i}_${j}`).value);if($(`a_${i}_${j}`).value.trim()===''||!Number.isFinite(v))throw Error(`A matritsasida ${i+1}-qator, ${j+1}-ustun qiymatini tekshiring.`);A[i][j]=v;}let d=$(`d_${i}`).value;if(d.trim()===''||!Number.isFinite(Number(d)))throw Error(`D${i+1} qiymatini tekshiring.`);D[i]=Number(d);}return {n,A,D};}
+function fmt(x){if(Math.abs(x)<1e-10)x=0;return Number(x.toFixed(6)).toString();}
+function solveGauss(M,b){
+ let n=b.length, aug=M.map((r,i)=>[...r,b[i]]), steps=[];
+ const snap=(title)=>steps.push({title,m:aug.map(r=>r.slice())});
+ snap('Boshlang‘ich kengaytirilgan matritsa [I − A | D]');
+ for(let k=0;k<n;k++){
+  let pivot=k;for(let i=k+1;i<n;i++)if(Math.abs(aug[i][k])>Math.abs(aug[pivot][k]))pivot=i;
+  if(Math.abs(aug[pivot][k])<1e-11)throw Error('Matritsa yagona yechimga ega emas (yetakchi element nolga juda yaqin). A qiymatlarini tekshiring.');
+  if(pivot!==k){[aug[k],aug[pivot]]=[aug[pivot],aug[k]];snap(`${k+1}-qadam: ${k+1}- va ${pivot+1}-satrlar almashtirildi (pivot tanlash).`);}
+  let pv=aug[k][k];for(let j=k;j<=n;j++)aug[k][j]/=pv;
+  snap(`${k+1}-qadam: ${k+1}-satr yetakchi elementga bo‘lindi; pivot 1 qilindi.`);
+  for(let i=k+1;i<n;i++){let factor=aug[i][k];if(Math.abs(factor)>1e-12){for(let j=k;j<=n;j++)aug[i][j]-=factor*aug[k][j];}}
+  snap(`${k+1}-qadam: pivot ostidagi elementlar nolga keltirildi.`);
+ }
+ let x=Array(n).fill(0);for(let i=n-1;i>=0;i--){x[i]=aug[i][n];for(let j=i+1;j<n;j++)x[i]-=aug[i][j]*x[j];}
+ steps.push({title:'Orqaga qo‘yish natijasi: noma’lumlar topildi.',solution:x.slice()});return {x,steps};
+}
+function renderSteps(steps){
+ $('steps').innerHTML='';
+ steps.forEach((s,i)=>{
+  let div=document.createElement('div');div.className='step';
+  let head=document.createElement('div');head.className='steptitle';
+  let num=document.createElement('span');num.className='stepnum';num.textContent=String(i+1);
+  let title=document.createElement('strong');title.textContent=s.title;
+  head.append(num,title);div.append(head);
+  if(s.solution){
+   let result=document.createElement('div');result.className='solutionline';
+   s.solution.forEach((v,j)=>{let chip=document.createElement('span');chip.className='solutionchip';chip.innerHTML=`<b>X${j+1}</b><span>${fmt(v)}</span>`;result.append(chip);});
+   div.append(result);
+  } else {
+   let tableWrap=document.createElement('div');tableWrap.className='steptablewrap';
+   let table=document.createElement('table');table.className='steptable';
+   let n=s.m.length;
+   let trh=document.createElement('tr');
+   for(let j=0;j<n;j++){let th=document.createElement('th');th.textContent=`x${j+1}`;trh.append(th);}
+   let rhs=document.createElement('th');rhs.className='rhshead';rhs.textContent='D';trh.append(rhs);
+   let thead=document.createElement('thead');thead.append(trh);table.append(thead);
+   let tbody=document.createElement('tbody');
+   s.m.forEach((row,ri)=>{let tr=document.createElement('tr');row.forEach((v,j)=>{let td=document.createElement('td');td.textContent=fmt(v);if(j===n)td.className='rhscol';tr.append(td);});tbody.append(tr);});
+   table.append(tbody);tableWrap.append(table);div.append(tableWrap);
+  }
+  $('steps').append(div);
+ });
+}
+function drawBars(svgId,values,labels){const svg=$(svgId);svg.innerHTML='';let W=600,H=250,left=45,right=15,top=20,bottom=42,plotH=H-top-bottom,plotW=W-left-right,max=Math.max(1,...values.map(v=>Math.abs(v)));const NS='http://www.w3.org/2000/svg';function el(tag,attrs,text){let e=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.append(e)}
+ for(let t=0;t<=4;t++){let y=top+plotH*t/4;el('line',{x1:left,y1:y,x2:W-right,y2:y,stroke:'#e2e8f0'});el('text',{x:left-8,y:y+4,'text-anchor':'end','font-size':11,fill:'#64748b'},fmt(max*(4-t)/4))}
+ let gap=plotW/values.length, bw=Math.min(36,gap*.58);values.forEach((v,i)=>{let h=Math.abs(v)/max*plotH,y=top+plotH-h,x=left+gap*i+(gap-bw)/2;el('rect',{x,y,width:bw,height:h,rx:4,fill:'#3b82f6'});el('text',{x:x+bw/2,y:Math.max(12,y-5),'text-anchor':'middle','font-size':11,fill:'#1e3a8a'},fmt(v));el('text',{x:x+bw/2,y:H-17,'text-anchor':'middle','font-size':11,fill:'#475569'},labels[i]);});
+}
+function calculate(){
+ try{let {n,A,D}=readData(),M=A.map((r,i)=>r.map((v,j)=>(i===j?1:0)-v));let {x,steps}=solveGauss(M,D);let residual=M.map((r,i)=>r.reduce((s,v,j)=>s+v*x[j],0)-D[i]);let maxResidual=Math.max(...residual.map(Math.abs));
+ $('status').className='status';$('status').textContent=`Hisob muvaffaqiyatli yakunlandi. Eng katta qoldiq: ${maxResidual.toExponential(2)}. Natija kiritilgan qiymatlarga bog‘liq.`;
+ $('results').innerHTML='';x.forEach((v,i)=>{let d=document.createElement('div');d.className='metric';d.innerHTML=`<small>X${i+1} — ${i+1}-tarmoq</small><strong>${fmt(v)}</strong>`;$('results').append(d);});
+ drawBars('barChart',x,x.map((_,i)=>`X${i+1}`));renderSteps(steps);lastSolution=x;
+ }catch(e){$('status').className='status error';$('status').textContent=e.message;$('results').innerHTML='';$('steps').innerHTML='';$('barChart').innerHTML='';}
+}
+$('n').addEventListener('change',()=>{renderInputs();$('status').className='status';$('status').textContent='Yangi o‘lcham tanlandi. Qiymatlarni tekshirib, hisoblang.';$('results').innerHTML='';$('steps').innerHTML='';$('barChart').innerHTML='';});
+$('example').addEventListener('click',()=>{renderInputs();let n=+$('n').value;for(let i=0;i<n;i++)for(let j=0;j<n;j++)$(`a_${i}_${j}`).value=i===j?0.2:(i===j+1||j===i+1?0.1:0.03);for(let i=0;i<n;i++)$(`d_${i}`).value=100-10*i;});
+$('reset').addEventListener('click',()=>{renderInputs();$('results').innerHTML='';$('steps').innerHTML='<p class="note">Hisoblashdan keyin Gauss usuli bosqichlari shu yerda chiqadi.</p>';$('barChart').innerHTML='';$('status').className='status';$('status').textContent='Qiymatlar boshlang‘ich namunaga qaytarildi.';});
+$('solve').addEventListener('click',calculate);
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));['leontief','trade','about'].forEach(id=>$(id).classList.toggle('hidden',id!==btn.dataset.tab));}));
+function trade(){
+ let vals=['h11','h12','h21','h22'].map(id=>Number($(id).value));if(vals.some(v=>!Number.isFinite(v)||v<=0)){$('tradeResult').className='status error';$('tradeResult').textContent='Barcha mehnat soatlari 0 dan katta bo‘lishi kerak.';return;}
+ let [a1,a2,b1,b2]=vals,c1=$('c1').value||'A davlati',c2=$('c2').value||'B davlati',p1=$('p1').value||'1-mahsulot',p2=$('p2').value||'2-mahsulot';
+ let ocA=a1/a2,ocB=b1/b2;let first=ocA<ocB?c1:ocA>ocB?c2:'Ikkala davlatda teng',second=ocA>ocB?c1:ocA<ocB?c2:'Ikkala davlatda teng';
+ $('tradeResult').className='status';$('tradeResult').innerHTML=`<b>${p1} bo‘yicha qiyosiy ustunlik:</b> ${first}.<br>${c1} uchun 1 ${p1} ning muqobil xarajati ${fmt(ocA)} ${p2}; ${c2} uchun ${fmt(ocB)} ${p2}.<br><b>${p2} bo‘yicha qiyosiy ustunlik:</b> ${second}.`;
+ drawTrade([a1,a2],[b1,b2],[p1,p2]);
+}
+function drawTrade(a,b,labels){let svg=$('tradeChart');svg.innerHTML='';const NS='http://www.w3.org/2000/svg';function el(tag,attrs,text){let e=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.append(e)}let max=Math.max(...a,...b),base=210;labels.forEach((lab,i)=>{let y=45+i*90;el('text',{x:8,y:y+15,'font-size':13,fill:'#334155'},lab);let w1=a[i]/max*380,w2=b[i]/max*380;el('rect',{x:105,y,width:w1,height:22,rx:4,fill:'#2563eb'});el('text',{x:110+w1,y:y+15,'font-size':12,fill:'#1e3a8a'},fmt(a[i]));el('rect',{x:105,y:y+28,width:w2,height:22,rx:4,fill:'#14b8a6'});el('text',{x:110+w2,y:y+43,'font-size':12,fill:'#0f766e'},fmt(b[i]));});el('rect',{x:105,y:12,width:12,height:12,fill:'#2563eb'});el('text',{x:122,y:22,'font-size':12,fill:'#334155'},$('c1').value||'A davlati');el('rect',{x:260,y:12,width:12,height:12,fill:'#14b8a6'});el('text',{x:277,y:22,'font-size':12,fill:'#334155'},$('c2').value||'B davlati');}
+['c1','c2','p1','p2'].forEach(id=>$(id).addEventListener('input',()=>{let c1=$('c1').value||'A davlati',c2=$('c2').value||'B davlati',p1=$('p1').value||'1-mahsulot',p2=$('p2').value||'2-mahsulot';$('lab11').textContent=`${c1} — ${p1} (soat)`;$('lab12').textContent=`${c1} — ${p2} (soat)`;$('lab21').textContent=`${c2} — ${p1} (soat)`;$('lab22').textContent=`${c2} — ${p2} (soat)`;}));
+$('tradeSolve').addEventListener('click',trade);
+renderInputs();calculate();trade();
+</script>
+</body></html>
